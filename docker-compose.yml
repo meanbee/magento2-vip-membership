@@ -1,0 +1,7 @@
+cli:
+  image: meanbee/magento2-php:7.0-cli
+  working_dir: /src
+  volumes:
+    - ~/.composer:/root/.composer
+    - .:/src
+    - ./test-results:/mnt/test-results
