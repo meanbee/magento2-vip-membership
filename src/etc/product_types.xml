@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Catalog:etc/product_types.xsd">
-    <type name="vipmembership" label="Vip Membership Product" modelInstance="Meanbee\VipMembership\Model\Product\Type\VipMembership" indexPriority="50" sortOrder="50">
+    <type name="vip" label="Vip Membership Product" modelInstance="Meanbee\VipMembership\Model\Product\Type\VipMembership" indexPriority="50" sortOrder="50">
         <customAttributes>
             <attribute name="refundable" value="true"/>
             <attribute name="is_real_product" value="false"/>
