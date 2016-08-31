@@ -1,7 +1,29 @@
 <?php namespace Meanbee\VipMembership\Model\Product\Type;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
+
 class VipMembership extends \Magento\Catalog\Model\Product\Type\AbstractType
 {
+    const TYPE_CODE = 'vip';
+    
+    /** @var  \Magento\Customer\Model\Session */
+    protected $customerSession;
+
+    public function __construct(
+        \Magento\Catalog\Model\Product\Option $catalogProductOption,
+        \Magento\Eav\Model\Config $eavConfig,
+        \Magento\Catalog\Model\Product\Type $catalogProductType,
+        \Magento\Framework\Event\ManagerInterface $eventManager,
+        \Magento\MediaStorage\Helper\File\Storage\Database $fileStorageDb,
+        \Magento\Framework\Filesystem $filesystem,
+        \Magento\Framework\Registry $coreRegistry,
+        \Psr\Log\LoggerInterface $logger,
+        ProductRepositoryInterface $productRepository,
+        \Magento\Customer\Model\Session $customerSession)
+    {
+        $this->customerSession = $customerSession;
+        parent::__construct($catalogProductOption, $eavConfig, $catalogProductType, $eventManager, $fileStorageDb, $filesystem, $coreRegistry, $logger, $productRepository);
+    }
 
     /**
      * Check is virtual product
@@ -32,5 +54,23 @@ class VipMembership extends \Magento\Catalog\Model\Product\Type\AbstractType
      */
     public function deleteTypeSpecificData(\Magento\Catalog\Model\Product $product)
     {
+    }
+
+    /**
+     * Ensure the customer is logged in when attempting to purchase a VIP Membership.
+     *
+     * @param \Magento\Framework\DataObject $buyRequest
+     * @param \Magento\Catalog\Model\Product $product
+     * @param string $processMode
+     * @return array|string
+     */
+    protected function _prepareProduct(\Magento\Framework\DataObject $buyRequest, $product, $processMode)
+    {
+        if ($this->_isStrictProcessMode($processMode) && !$this->customerSession->isLoggedIn()) {
+            // @TODO Make a translatable phrase...
+            return "You need to be logged in to purchase a membership";
+        }
+
+        return parent::_prepareProduct($buyRequest, $product, $processMode);
     }
 }

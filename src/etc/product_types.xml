@@ -3,6 +3,7 @@
     <type name="vipmembership" label="Vip Membership Product" modelInstance="Meanbee\VipMembership\Model\Product\Type\VipMembership" indexPriority="50" sortOrder="50">
         <customAttributes>
             <attribute name="refundable" value="true"/>
+            <attribute name="is_real_product" value="false"/>
         </customAttributes>
     </type>
 </config>
