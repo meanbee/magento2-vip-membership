@@ -5,9 +5,12 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 class VipMembership extends \Magento\Catalog\Model\Product\Type\AbstractType
 {
     const TYPE_CODE = 'vip';
-    
+
     /** @var  \Magento\Customer\Model\Session */
     protected $customerSession;
+
+    /** @var \Meanbee\VipMembership\Helper\Config */
+    protected $configHelper;
 
     public function __construct(
         \Magento\Catalog\Model\Product\Option $catalogProductOption,
@@ -19,8 +22,10 @@ class VipMembership extends \Magento\Catalog\Model\Product\Type\AbstractType
         \Magento\Framework\Registry $coreRegistry,
         \Psr\Log\LoggerInterface $logger,
         ProductRepositoryInterface $productRepository,
-        \Magento\Customer\Model\Session $customerSession)
+        \Magento\Customer\Model\Session $customerSession,
+        \Meanbee\VipMembership\Helper\Config $configHelper)
     {
+        $this->configHelper = $configHelper;
         $this->customerSession = $customerSession;
         parent::__construct($catalogProductOption, $eavConfig, $catalogProductType, $eventManager, $fileStorageDb, $filesystem, $coreRegistry, $logger, $productRepository);
     }
@@ -66,6 +71,13 @@ class VipMembership extends \Magento\Catalog\Model\Product\Type\AbstractType
      */
     protected function _prepareProduct(\Magento\Framework\DataObject $buyRequest, $product, $processMode)
     {
+        // Don't allow the customer to purchase if functionality is disabled.
+        if (!$this->configHelper->isEnabled()) {
+            // @TODO Make a translatable phrase...
+            return 'VIP Membership is currently disabled.';
+        }
+
+        // Only logged in users can add to cart.
         if ($this->_isStrictProcessMode($processMode) && !$this->customerSession->isLoggedIn()) {
             // @TODO Make a translatable phrase...
             return "You need to be logged in to purchase a membership";
