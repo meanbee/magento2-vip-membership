@@ -13,8 +13,8 @@
     }
   },
   "require": {
-    "magento/framework": "100.0.*",
-    "magento/module-catalog": "100.0.*",
+    "magento/framework": "100.1.*",
+    "magento/module-catalog": "101.0.*",
     "psr/log": "~1.0"
   },
   "require-dev": {
