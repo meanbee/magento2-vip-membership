@@ -20,7 +20,7 @@ class Config extends \Magento\Framework\App\Helper\AbstractHelper
 
     /**
      * Retrieve the Customer Group defined for VIP members usage.
-     * @return mixed
+     * @return integer
      */
     public function getVipCustomerGroup()
     {

@@ -17,17 +17,22 @@ class CheckVipMemberships
     /** @var \Magento\Framework\Event\Manager  */
     protected $_eventManager;
 
+    /** @var \Meanbee\VipMembership\Model\VipCustomerManagement */
+    protected $_vipCustomerManagement;
+
     public function __construct(
         \Meanbee\VipMembership\Helper\Config $configHelper,
         \Magento\Customer\Model\ResourceModel\Customer\CollectionFactory $customerCollectionFactory,
         \Magento\Customer\Api\GroupManagementInterface $groupManagement,
-        \Magento\Framework\Event\Manager $eventManager
+        \Magento\Framework\Event\Manager $eventManager,
+        \Meanbee\VipMembership\Model\VipCustomerManagement $vipCustomerManagement
     )
     {
         $this->_configHelper = $configHelper;
         $this->_customerCollectionFactory = $customerCollectionFactory;
         $this->_groupManagement = $groupManagement;
         $this->_eventManager = $eventManager;
+        $this->_vipCustomerManagement = $vipCustomerManagement;
     }
 
     /**
@@ -44,15 +49,11 @@ class CheckVipMemberships
         /** @var \Magento\Customer\Model\ResourceModel\Customer\Collection $customerCollection */
         $customerCollection = $this->_customerCollectionFactory->create();
         $customerCollection->addFieldToFilter(CustomerInterface::GROUP_ID, ['eq' => $this->_configHelper->getVipCustomerGroup()])
-            ->addFieldToFilter('vip_expiry', ['lteq' => (new \DateTime('now'))]);
+            ->addFieldToFilter('vip_expiry_date', ['lteq' => (new \DateTime('now'))]);
 
         /** @var Customer $customer */
         foreach($customerCollection as $customer) {
-            // Customers could be from different stores so we need to check and load the default group each time.
-            $defaultGroupId = $this->_groupManagement->getDefaultGroup($customer->getStoreId())->getId();
-            $customer->setGroupId($defaultGroupId);
-            $customer->setData(['vip_expiry' => null]);
-            $customer->save();
+            $this->_vipCustomerManagement->revokeVipMembership($customer);
         }
 
         // Could be used for dispatching emails to inform the customer of their expired membership.

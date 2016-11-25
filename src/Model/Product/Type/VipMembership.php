@@ -1,6 +1,16 @@
 <?php namespace Meanbee\VipMembership\Model\Product\Type;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface,
+    \Magento\Catalog\Model\Product\Option,
+    \Magento\Eav\Model\Config,
+    \Magento\Catalog\Model\Product\Type,
+    \Magento\Framework\Event\ManagerInterface,
+    \Magento\MediaStorage\Helper\File\Storage\Database,
+    \Magento\Framework\Filesystem,
+    \Magento\Framework\Registry,
+    \Psr\Log\LoggerInterface,
+    \Magento\Customer\Model\Session,
+    \Meanbee\VipMembership\Helper\Config as ConfigHelper;
 
 class VipMembership extends \Magento\Catalog\Model\Product\Type\AbstractType
 {
@@ -13,17 +23,17 @@ class VipMembership extends \Magento\Catalog\Model\Product\Type\AbstractType
     protected $configHelper;
 
     public function __construct(
-        \Magento\Catalog\Model\Product\Option $catalogProductOption,
-        \Magento\Eav\Model\Config $eavConfig,
-        \Magento\Catalog\Model\Product\Type $catalogProductType,
-        \Magento\Framework\Event\ManagerInterface $eventManager,
-        \Magento\MediaStorage\Helper\File\Storage\Database $fileStorageDb,
-        \Magento\Framework\Filesystem $filesystem,
-        \Magento\Framework\Registry $coreRegistry,
-        \Psr\Log\LoggerInterface $logger,
+        Option $catalogProductOption,
+        Config $eavConfig,
+        Type $catalogProductType,
+        ManagerInterface $eventManager,
+        Database $fileStorageDb,
+        Filesystem $filesystem,
+        Registry $coreRegistry,
+        LoggerInterface $logger,
         ProductRepositoryInterface $productRepository,
-        \Magento\Customer\Model\Session $customerSession,
-        \Meanbee\VipMembership\Helper\Config $configHelper)
+        Session $customerSession,
+        ConfigHelper $configHelper)
     {
         $this->configHelper = $configHelper;
         $this->customerSession = $customerSession;
@@ -73,14 +83,12 @@ class VipMembership extends \Magento\Catalog\Model\Product\Type\AbstractType
     {
         // Don't allow the customer to purchase if functionality is disabled.
         if (!$this->configHelper->isEnabled()) {
-            // @TODO Make a translatable phrase...
-            return 'VIP Membership is currently disabled.';
+            return __("VIP Membership is currently disabled.");
         }
 
         // Only logged in users can add to cart.
         if ($this->_isStrictProcessMode($processMode) && !$this->customerSession->isLoggedIn()) {
-            // @TODO Make a translatable phrase...
-            return "You need to be logged in to purchase a membership";
+            return __("You need to be logged in to purchase a membership");
         }
 
         return parent::_prepareProduct($buyRequest, $product, $processMode);

@@ -10,10 +10,10 @@ use Magento\Framework\Data\OptionSourceInterface;
  */
 class VipLengthUnit extends AbstractSource implements SourceInterface, OptionSourceInterface
 {
-    const UNIT_DAYS = 'days';
-    const UNIT_WEEKS = 'weeks';
-    const UNIT_MONTHS = 'months';
-    const UNIT_YEARS = 'years';
+    const UNIT_DAYS = 'D';
+    const UNIT_WEEKS = 'W';
+    const UNIT_MONTHS = 'M';
+    const UNIT_YEARS = 'Y';
 
     /**
      * Retrieve option array
