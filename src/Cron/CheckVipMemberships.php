@@ -53,7 +53,7 @@ class CheckVipMemberships
 
         /** @var Customer $customer */
         foreach($customerCollection as $customer) {
-            $this->_vipCustomerManagement->revokeVipMembership($customer);
+            $this->_vipCustomerManagement->revokeVipMembership($customer->getDataModel());
         }
 
         // Could be used for dispatching emails to inform the customer of their expired membership.

@@ -35,12 +35,13 @@ class OrderTest extends \PHPUnit_Framework_TestCase
 
         $this->vip_item = $this->getMock(
             'Magento\Sales\Model\ResourceModel\Order\Item',
-            ['getProductType', 'getSku'],
+            ['getProductType', 'getProductId', 'getQtyOrdered'],
             [],
             '',
             false
         );
         $this->vip_item->method('getProductType')->willReturn(VipMembership::TYPE_CODE);
+        $this->vip_item->method('getQtyOrdered')->willReturn(1);
 
         $collection = $this->getMock('Magento\Sales\Model\ResourceModel\Order\Item\Collection', [], [], '', false);
         $collection->expects($this->any())
@@ -64,8 +65,8 @@ class OrderTest extends \PHPUnit_Framework_TestCase
         $extensionAttributes = $helper->getObject('Magento\Catalog\Api\Data\ProductExtension');
         $this->productMock->method('getExtensionAttributes')->willReturn($extensionAttributes);
 
-        $this->productRepositoryMock = $this->getMock('Magento\Catalog\Model\ProductRepository', ['get'], [], '', false);
-        $this->productRepositoryMock->method('get')->willReturn($this->productMock);
+        $this->productRepositoryMock = $this->getMock('Magento\Catalog\Model\ProductRepository', ['getById'], [], '', false);
+        $this->productRepositoryMock->method('getById')->willReturn($this->productMock);
 
         $this->configHelperMock = $this->getMockBuilder('Meanbee\VipMembership\Helper\Config')
             ->disableOriginalConstructor()
@@ -122,7 +123,7 @@ class OrderTest extends \PHPUnit_Framework_TestCase
 
         $item = $this->getMock(
             'Magento\Sales\Model\ResourceModel\Order\Item',
-            ['getProductType', 'getSku'],
+            ['getProductType', 'getProductId'],
             [],
             '',
             false

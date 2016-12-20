@@ -63,7 +63,7 @@ class VipCustomerManagement implements VipCustomerManagementInterface
             return $customer;
         }
 
-        $customer->getExtensionAttributes()->setVipExpiry($this->calculateExpiryDate($customer, $order))
+        $customer->getExtensionAttributes()->setVipExpiry($this->calculateExpiryDate($customer, $order)->format(\Magento\Framework\Stdlib\DateTime::DATETIME_PHP_FORMAT))
             ->setVipOrderId($order->getIncrementId());
         $customer->setGroupId($this->getGroupId());
 
@@ -78,7 +78,9 @@ class VipCustomerManagement implements VipCustomerManagementInterface
      */
     public function revokeVipMembership(CustomerInterface $customer)
     {
-        $customer->getExtensionAttributes()->setVipExpiry(new \DateTime('now'));
+        $expiry = (new \DateTime('now'))->format(\Magento\Framework\Stdlib\DateTime::DATETIME_PHP_FORMAT);
+        $customer->getExtensionAttributes()
+            ->setVipExpiry($expiry);
         $customer->setGroupId($this->_groupManagement->getDefaultGroup()->getId());
         $this->_customerRepository->save($customer);
 

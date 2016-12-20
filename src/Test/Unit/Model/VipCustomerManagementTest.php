@@ -44,12 +44,13 @@ class VipCustomerManagementTest extends \PHPUnit_Framework_TestCase
 
         $this->vip_item = $this->getMock(
             'Magento\Sales\Model\ResourceModel\Order\Item',
-            ['getProductType', 'getSku'],
+            ['getProductType', 'getProductId', 'getQtyOrdered'],
             [],
             '',
             false
         );
         $this->vip_item->method('getProductType')->willReturn(VipMembership::TYPE_CODE);
+        $this->vip_item->method('getQtyOrdered')->willReturn(1);
 
         $collection = $this->getMock('Magento\Sales\Model\ResourceModel\Order\Item\Collection', [], [], '', false);
         $collection->expects($this->any())
@@ -75,8 +76,8 @@ class VipCustomerManagementTest extends \PHPUnit_Framework_TestCase
         $this->productMock->getExtensionAttributes()->setVipLength(1);
         $this->productMock->getExtensionAttributes()->setVipLengthUnit(VipLengthUnit::UNIT_DAYS);
 
-        $this->productRepositoryMock = $this->getMock('Magento\Catalog\Model\ProductRepository', ['get'], [], '', false);
-        $this->productRepositoryMock->method('get')->willReturn($this->productMock);
+        $this->productRepositoryMock = $this->getMock('Magento\Catalog\Model\ProductRepository', ['getById'], [], '', false);
+        $this->productRepositoryMock->method('getById')->willReturn($this->productMock);
 
         $this->configHelperMock = $this->getMockBuilder('Meanbee\VipMembership\Helper\Config')
             ->disableOriginalConstructor()
@@ -105,7 +106,7 @@ class VipCustomerManagementTest extends \PHPUnit_Framework_TestCase
         $revoked_customer = $this->vipCustomerManagement->revokeVipMembership($original_customer);
 
         // Confirm expiry date has been updated.
-        $this->assertEquals(new \DateTime('now'), $revoked_customer->getExtensionAttributes()->getVipExpiry());
+        $this->assertEquals((new \DateTime('now'))->format(\Magento\Framework\Stdlib\DateTime::DATETIME_PHP_FORMAT), $revoked_customer->getExtensionAttributes()->getVipExpiry());
 
         // Confirm customer group has been changed.
         $this->assertEquals(1, $revoked_customer->getGroupId());
@@ -119,7 +120,7 @@ class VipCustomerManagementTest extends \PHPUnit_Framework_TestCase
         $customer = $this->vipCustomerManagement->becomeVipMember($this->getNonVipCustomer(), $this->order);
         $expected_expiry = new \DateTime();
         $expected_expiry->add(new \DateInterval('P1D'));
-        $this->assertEquals($expected_expiry, $customer->getExtensionAttributes()->getVipExpiry());
+        $this->assertEquals($expected_expiry->format(\Magento\Framework\Stdlib\DateTime::DATETIME_PHP_FORMAT), $customer->getExtensionAttributes()->getVipExpiry());
         $expected_group = self::MOCK_GROUP_ID;
         $this->assertEquals($expected_group, $customer->getGroupId());
     }
@@ -145,7 +146,7 @@ class VipCustomerManagementTest extends \PHPUnit_Framework_TestCase
 
         $item = $this->getMock(
             'Magento\Sales\Model\ResourceModel\Order\Item',
-            ['getProductType', 'getSku'],
+            ['getProductType', 'getProductId'],
             [],
             '',
             false

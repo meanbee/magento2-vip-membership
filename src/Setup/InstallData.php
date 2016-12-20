@@ -45,15 +45,11 @@ class InstallData implements InstallDataInterface
             'type' => 'int',
             'label' => 'VIP Membership Length',
             'input' => 'text',
-            'required' => false,
-            'user_defined' => true,
+            'required' => true,
+            'sort_order' => 8,
             'searchable' => true,
-            'filterable' => true,
-            'comparable' => false,
-            'visible_in_advanced_search' => true,
-            'is_used_in_grid' => true,
-            'is_visible_in_grid' => false,
-            'is_filterable_in_grid' => true,
+            'used_in_product_listing' => false,
+            'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_WEBSITE,
             'apply_to' => VipMembership::TYPE_CODE
         ]);
         $eavSetup->addAttribute(Product::ENTITY, 'vip_length_unit', [
@@ -64,6 +60,7 @@ class InstallData implements InstallDataInterface
             'sort_order' => 9,
             'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_WEBSITE,
             'searchable' => false,
+            'required' => true,
             'used_in_product_listing' => false,
             'apply_to' => VipMembership::TYPE_CODE
         ]);
@@ -72,7 +69,7 @@ class InstallData implements InstallDataInterface
         // Create customer attributes (vip_expiry, vip_order_id)
         //
         $eavSetup->addAttribute(Customer::ENTITY, 'vip_expiry', [
-            'type' => 'static',
+            'type' => 'datetime',
             'label' => 'VIP Membership Expiry',
             'input' => 'date',
             'frontend' => 'Magento\Eav\Model\Entity\Attribute\Frontend\Datetime',
@@ -86,7 +83,7 @@ class InstallData implements InstallDataInterface
         ]);
         $eavSetup->addAttribute(Customer::ENTITY, 'vip_order_id', [
             // Needs to be an integer.
-            'type' => 'static',
+            'type' => 'varchar',
             'label' => 'VIP Membership Order ID',
             'input' => 'text',
             'required' => false,

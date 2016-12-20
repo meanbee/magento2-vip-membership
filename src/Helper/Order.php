@@ -39,11 +39,11 @@ class Order extends \Magento\Framework\App\Helper\AbstractHelper
         $order_items = $this->_getVipOrderItems($order);
         $item = array_pop($order_items);
         /** @var \Magento\Catalog\Api\Data\ProductInterface $product */
-        $product = $this->_productRepository->get($item->getSku());
+        $product = $this->_productRepository->getById($item->getProductId());
 
         return new \DateInterval(sprintf(
             'P%d%s',
-            $product->getExtensionAttributes()->getVipLength(),
+            $product->getExtensionAttributes()->getVipLength() * $item->getQtyOrdered(),
             $product->getExtensionAttributes()->getVipLengthUnit()
         ));
     }
