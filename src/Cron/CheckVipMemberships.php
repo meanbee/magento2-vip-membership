@@ -7,14 +7,14 @@ class CheckVipMemberships
 {
     /** @var \Meanbee\VipMembership\Helper\Config */
     protected $_configHelper;
-    
+
     /** @var \Magento\Customer\Model\ResourceModel\Customer\CollectionFactory */
     protected $_customerCollectionFactory;
 
-    /** @var \Magento\Customer\Api\GroupManagementInterface  */
+    /** @var \Magento\Customer\Api\GroupManagementInterface */
     protected $_groupManagement;
-    
-    /** @var \Magento\Framework\Event\Manager  */
+
+    /** @var \Magento\Framework\Event\Manager */
     protected $_eventManager;
 
     /** @var \Meanbee\VipMembership\Model\VipCustomerManagement */
@@ -52,12 +52,11 @@ class CheckVipMemberships
             ->addFieldToFilter('vip_expiry_date', ['lteq' => (new \DateTime('now'))]);
 
         /** @var Customer $customer */
-        foreach($customerCollection as $customer) {
-            $this->_vipCustomerManagement->revokeVipMembership($customer);
+        foreach ($customerCollection as $customer) {
+            $this->_vipCustomerManagement->revokeVipMembership($customer->getDataModel());
         }
 
         // Could be used for dispatching emails to inform the customer of their expired membership.
         $this->_eventManager->dispatch('meanbee_vipmembership_expired_customers', ['customers' => $customerCollection]);
-        
     }
 }

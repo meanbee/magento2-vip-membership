@@ -41,6 +41,7 @@ class CheckOrderForVipMembership implements ObserverInterface
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         // Don't proceed if VIP Membership functionality is disabled.
+
         if (!$this->_configHelper->isEnabled()) {
             return;
         }
