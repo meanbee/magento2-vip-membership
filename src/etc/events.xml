@@ -3,4 +3,7 @@
     <event name="checkout_onepage_controller_success_action">
         <observer name="meanbee_vip_check" instance="Meanbee\VipMembership\Observer\CheckOrderForVipMembership" />
     </event>
+    <event name="meanbee_vipmembership_expired_customers">
+        <observer name="meanbee_email_expired_vips" instance="Meanbee\VipMembership\Observer\EmailExpiredVipMembers"/>
+    </event>
 </config>
