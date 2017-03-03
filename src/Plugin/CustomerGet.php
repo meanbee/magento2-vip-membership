@@ -56,6 +56,10 @@ class CustomerGet
             ->setVipExpiry($expiry)
             ->setVipOrderId($customerModel->getData('vip_order_id'));
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 17eb3be372b514aa6aa1f8f4f491c5cd5803d963
         return $customer;
     }
 }
