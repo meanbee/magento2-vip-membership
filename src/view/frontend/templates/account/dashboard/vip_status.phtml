@@ -1,0 +1,13 @@
+<?php /** @var $block \Meanbee\VipMembership\Block\Account\Dashboard\VipStatus */ ?>
+<div class="block block-dashboard-vip">
+    <div class="block-title">
+        <strong><?php /* @escapeNotVerified */ echo __('VIP Membership Status') ?></strong>
+    </div>
+    <div class="block-content">
+        <div class="box box-vip">
+            <div class="box-content">
+                <p><?php /* @escapeNotVerified */  echo __('You have %s days left of your VIP Membership', $block->getDaysLeft()) ?></p>
+            </div>
+        </div>
+    </div>
+</div>

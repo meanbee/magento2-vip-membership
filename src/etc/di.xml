@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Meanbee\VipMembership\Api\VipCustomerManagementInterface" type="Meanbee\VipMembership\Model\VipCustomerManagement"/>
+    <type name="Magento\Customer\Api\CustomerRepositoryInterface">
+        <plugin name="get_customer_vip" type="Meanbee\VipMembership\Plugin\CustomerGet"/>
+    </type>
+    <type name="Magento\Catalog\Api\ProductRepositoryInterface">
+        <plugin name="get_product_vip" type="Meanbee\VipMembership\Plugin\ProductGet"/>
+    </type>
+</config>
