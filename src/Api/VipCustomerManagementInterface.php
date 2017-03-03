@@ -1,5 +1,7 @@
 <?php namespace Meanbee\VipMembership\Api;
 
+use Magento\Customer\Api\Data\CustomerInterface;
+
 interface VipCustomerManagementInterface {
 
     /**
@@ -29,5 +31,17 @@ interface VipCustomerManagementInterface {
      * @return integer
      */
     public function getGroupId();
+
+    /**
+     * @param CustomerInterface $customer
+     * @return boolean
+     */
+    public function isVip(CustomerInterface $customer);
+
+    /**
+     * @param CustomerInterface $customer
+     * @return integer
+     */
+    public function getDaysLeft(CustomerInterface $customer);
 
 }

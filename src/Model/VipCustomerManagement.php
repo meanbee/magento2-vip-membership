@@ -121,4 +121,17 @@ class VipCustomerManagement implements VipCustomerManagementInterface
         }
         return $expiry->add($this->_orderHelper->getPurchasedMembershipLength($order));
     }
+
+    public function isVip(CustomerInterface $customer)
+    {
+        return $customer->getGroupId() == $this->_configHelper->getVipCustomerGroup();
+    }
+
+    public function getDaysLeft(CustomerInterface $customer)
+    {
+        $expiry = new \DateTime($customer->getExtensionAttributes()->getVipExpiry());
+        $today = new \DateTime('now');
+
+        return $today->diff($expiry)->days;
+    }
 }
